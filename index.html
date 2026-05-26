@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Portfolio of [Varshit jha] — Frontend Developer" />
+
+  <title>[Varshit jha] | Frontend Developer</title>
+
+  <!-- Google Fonts: Inter for body, Fira Code for code-style accents -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Your stylesheet — always last so it loads after fonts -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+
+<body>
+
+<!-- ============================================
+     NAVBAR
+     <header> is semantic — tells browsers and
+     screen readers this is the page header.
+     ============================================ -->
+<header class="navbar" id="navbar">
+  <nav class="navbar__inner container">
+
+    <!-- LOGO / BRAND NAME
+         This is an anchor so clicking it scrolls
+         back to the top of the page. -->
+    <a href="#home" class="navbar__logo">
+      &lt;varshit /&gt;
+    </a>
+
+    <!-- DESKTOP NAV LINKS
+         <ul> inside <nav> is the correct semantic
+         structure for a navigation menu. -->
+    <ul class="navbar__links" id="navLinks">
+      <li><a href="#home"     class="navbar__link">Home</a></li>
+      <li><a href="#about"    class="navbar__link">About</a></li>
+      <li><a href="#skills"   class="navbar__link">Skills</a></li>
+      <li><a href="#projects" class="navbar__link">Projects</a></li>
+      <li><a href="#contact"  class="navbar__link">Contact</a></li>
+    </ul>
+
+    <!-- CTA BUTTON (desktop only) -->
+    <a
+    href="assets/resume/resume.pdf"
+      class="btn btn--primary navbar__cta"
+      download
+    >
+      Resume ↓
+    </a>
+
+    <!-- HAMBURGER BUTTON (mobile only)
+         aria-label tells screen readers what this
+         button does since it has no visible text.
+         aria-expanded tells whether menu is open. -->
+    <button
+      class="navbar__hamburger"
+      id="hamburgerBtn"
+      aria-label="Toggle navigation menu"
+      aria-expanded="false"
+    >
+      <span class="navbar__hamburger-bar"></span>
+      <span class="navbar__hamburger-bar"></span>
+      <span class="navbar__hamburger-bar"></span>
+    </button>
+
+  </nav>
+</header>
+
+  <!-- ============================================
+     HERO SECTION
+     ============================================ -->
+<section class="hero" id="home">
+  <div class="container hero__inner">
+
+    <!-- LEFT: Text content -->
+    <div class="hero__content">
+
+      <div class="hero__greeting">
+        <span class="hero__greeting-dot"></span>
+        Available for opportunities
+      </div>
+
+      <h1 class="hero__name">
+        Hi, I'm <span class="hero__name-highlight">varshitjha</span>
+      </h1>
+
+      <!-- Typing animation container -->
+      <div class="hero__role-wrapper">
+        <span class="hero__role-prefix">I'm a </span>
+        <span class="hero__role-text" id="typingText"></span>
+        <span class="hero__cursor" id="typingCursor">|</span>
+      </div>
+
+      <p class="hero__description">
+        A passionate Computer Science student from India,
+        building modern web experiences with clean code.
+        Currently learning React and sharpening my
+        DSA skills — one project at a time.
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="hero__actions">
+        <a href="#projects" class="btn btn--primary">
+          View Projects
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round"
+               aria-hidden="true">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+        <a href="assets/resume/resume.pdf"
+           class="btn btn--outline" download>
+          Download Resume
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round"
+               aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Social links -->
+      <div class="hero__socials">
+        <a href="https://github.com/varshitjha"
+           class="hero__social-link" target="_blank"
+           rel="noopener noreferrer" aria-label="GitHub">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"
+               aria-hidden="true">
+            <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425
+              2.865 8.18 6.839 9.504.5.092.682-.217.682-.483
+              0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343
+              -3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908
+              -.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531
+              1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35
+              -1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951
+              0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272
+              .098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1
+              12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296
+              2.747-1.027 2.747-1.027.546 1.379.202 2.398.1
+              2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339
+              4.695-4.566 4.943.359.309.678.92.678 1.855 0
+              1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02
+              10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/>
+          </svg>
+        </a>
+        <a href="https://www.linkedin.com/in/varshit-jha-975a6b1a5/"
+           class="hero__social-link" target="_blank"
+           rel="noopener noreferrer" aria-label="LinkedIn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"
+               aria-hidden="true">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027
+              -3.037-1.852-3.037-1.853 0-2.136 1.445-2.136
+              2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9
+              1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267
+              5.455v6.286zM5.337 7.433a2.062 2.062 0 0
+              1-2.063-2.065 2.064 2.064 0 1 1 2.063
+              2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225
+              0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792
+              24 1.771 24h20.451C23.2 24 24 23.227 24
+              22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
+        </a>
+        <a href="https://mail.google.com/mail/u/0/#inbox"
+           class="hero__social-link" aria-label="Email">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round"
+               aria-hidden="true">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: Developer avatar graphic -->
+    <div class="hero__visual" aria-hidden="true">
+      <div class="hero__avatar-wrap">
+
+        <!-- Glow ring -->
+        <div class="hero__glow-ring"></div>
+
+        <!-- Avatar card -->
+        <div class="hero__avatar">
+          <!-- Code window header -->
+          <div class="hero__code-header">
+            <span class="hero__code-dot hero__code-dot--red"></span>
+            <span class="hero__code-dot hero__code-dot--yellow"></span>
+            <span class="hero__code-dot hero__code-dot--green"></span>
+            <span class="hero__code-filename">portfolio.js</span>
+          </div>
+
+          <!-- Fake code lines -->
+          <div class="hero__code-body">
+            <div class="hero__code-line">
+              <span class="code-purple">const</span>
+              <span class="code-blue"> developer</span>
+              <span class="code-white"> = {</span>
+            </div>
+            <div class="hero__code-line hero__code-line--indent">
+              <span class="code-teal">name</span>
+              <span class="code-white">: </span>
+              <span class="code-yellow">"varshitjha"</span>
+              <span class="code-white">,</span>
+            </div>
+            <div class="hero__code-line hero__code-line--indent">
+              <span class="code-teal">role</span>
+              <span class="code-white">: </span>
+              <span class="code-yellow">"Frontend Dev"</span>
+              <span class="code-white">,</span>
+            </div>
+            <div class="hero__code-line hero__code-line--indent">
+              <span class="code-teal">skills</span>
+              <span class="code-white">: [</span>
+              <span class="code-yellow">"HTML"</span>
+              <span class="code-white">, </span>
+              <span class="code-yellow">"CSS"</span>
+              <span class="code-white">,</span>
+            </div>
+            <div class="hero__code-line hero__code-line--indent2">
+              <span class="code-yellow">"JS"</span>
+              <span class="code-white">, </span>
+              <span class="code-yellow">"React"</span>
+              <span class="code-white">],</span>
+            </div>
+            <div class="hero__code-line hero__code-line--indent2">
+              <span class="code-yellow">"AI"</span>
+              <span class="code-white">, </span>
+              <span class="code-yellow">"DATA SCIENCE"</span>
+              <span class="code-white">],</span>
+            </div>
+            <div class="hero__code-line hero__code-line--indent">
+              <span class="code-teal">status</span>
+              <span class="code-white">: </span>
+              <span class="code-green">"open_to_work"</span>
+            </div>
+            <div class="hero__code-line">
+              <span class="code-white">}</span>
+            </div>
+            <div class="hero__code-line hero__code-line--gap">
+              <span class="code-purple">function</span>
+              <span class="code-blue"> hire</span>
+              <span class="code-white">(</span>
+              <span class="code-teal">dev</span>
+              <span class="code-white">) {</span>
+            </div>
+            <div class="hero__code-line hero__code-line--indent">
+              <span class="code-purple">return</span>
+              <span class="code-green"> "Best decision!"</span>
+              <span class="code-white">;</span>
+            </div>
+            <div class="hero__code-line">
+              <span class="code-white">}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating badges -->
+        <div class="hero__badge hero__badge--tl">
+          <span class="hero__badge-dot"></span>
+          React
+        </div>
+        <div class="hero__badge hero__badge--br">
+          <span class="hero__badge-dot"></span>
+          JavaScript
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scroll indicator -->
+  <a href="#about" class="hero__scroll" aria-label="Scroll to about section">
+    <div class="hero__scroll-mouse">
+      <div class="hero__scroll-wheel"></div>
+    </div>
+    <span>Scroll down</span>
+  </a>
+
+</section>
+
+  <!-- ============================================
+     ABOUT SECTION
+     ============================================ -->
+<section class="about section" id="about">
+  <div class="container">
+
+    <!-- Section header — reuses global classes from Phase 1 -->
+    <div class="section__header reveal">
+      <span class="section__tag">// about me</span>
+      <h2 class="section__title">Who I Am</h2>
+      <p class="section__subtitle">
+        A developer in the making — building skills,
+        shipping projects, and growing every day.
+      </p>
+    </div>
+
+    <!-- Main two-column layout -->
+    <div class="about__inner">
+
+      <!-- LEFT: Text content -->
+      <div class="about__content reveal">
+
+        <p class="about__intro">
+          I'm a Computer Science student from Gujarat, India, passionate
+          about building clean and functional web experiences. I started
+          with the basics — HTML, CSS, and C — and I'm now working my
+          way through JavaScript, DSA, and modern web development.
+        </p>
+
+        <p class="about__intro">
+          I believe in learning by doing. Every project I build teaches
+          me something new, and I document everything on GitHub so
+          recruiters and collaborators can see my actual progress —
+          not just a polished résumé.
+        </p>
+
+        <!-- Education timeline -->
+        <div class="about__education">
+          <h3 class="about__block-title">Education & Journey</h3>
+
+          <div class="about__timeline">
+
+            <div class="about__timeline-item">
+              <div class="about__timeline-dot"></div>
+              <div class="about__timeline-body">
+                <span class="about__timeline-year">2023 – Present</span>
+                <h4 class="about__timeline-role">
+                  B.Tech in Computer Science
+                </h4>
+                <p class="about__timeline-place">
+                  [Your College Name], Gujarat
+                </p>
+              </div>
+            </div>
+
+            <div class="about__timeline-item">
+              <div class="about__timeline-dot"></div>
+              <div class="about__timeline-body">
+                <span class="about__timeline-year">2024 – Present</span>
+                <h4 class="about__timeline-role">
+                  Self-learning: Web Development
+                </h4>
+                <p class="about__timeline-place">
+                  HTML · CSS · JavaScript · DSA · React (in progress)
+                </p>
+              </div>
+            </div>
+
+            <div class="about__timeline-item">
+              <div class="about__timeline-dot"></div>
+              <div class="about__timeline-body">
+                <span class="about__timeline-year">2025 – Present</span>
+                <h4 class="about__timeline-role">
+                  Open Source Contributor (beginner)
+                </h4>
+                <p class="about__timeline-place">
+                  GitHub · first PRs · portfolio projects
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <a href="#contact" class="btn btn--primary about__cta">
+          Let's Connect
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round"
+               aria-hidden="true">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+
+      </div>
+
+      <!-- RIGHT: Highlight cards + stats -->
+      <div class="about__sidebar">
+
+        <!-- Quick highlight cards -->
+        <div class="about__highlights reveal-children">
+
+          <div class="about__highlight-card">
+            <div class="about__highlight-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="1.8"
+                   stroke-linecap="round" stroke-linejoin="round"
+                   aria-hidden="true">
+                <polyline points="16 18 22 12 16 6"/>
+                <polyline points="8 6 2 12 8 18"/>
+              </svg>
+            </div>
+            <div>
+              <h4 class="about__highlight-title">Clean Code First</h4>
+              <p class="about__highlight-text">
+                I write readable, well-commented code that
+                other developers can understand easily.
+              </p>
+            </div>
+          </div>
+
+          <div class="about__highlight-card">
+            <div class="about__highlight-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="1.8"
+                   stroke-linecap="round" stroke-linejoin="round"
+                   aria-hidden="true">
+                <rect x="2" y="3" width="20" height="14" rx="2"/>
+                <path d="M8 21h8M12 17v4"/>
+              </svg>
+            </div>
+            <div>
+              <h4 class="about__highlight-title">Responsive by Default</h4>
+              <p class="about__highlight-text">
+                Every project I build works on mobile,
+                tablet, and desktop without compromise.
+              </p>
+            </div>
+          </div>
+
+          <div class="about__highlight-card">
+            <div class="about__highlight-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="1.8"
+                   stroke-linecap="round" stroke-linejoin="round"
+                   aria-hidden="true">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                <path d="M2 17l10 5 10-5"/>
+                <path d="M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+            <div>
+              <h4 class="about__highlight-title">Always Learning</h4>
+              <p class="about__highlight-text">
+                Currently deepening DSA knowledge and
+                exploring React for modern UI development.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Stats grid -->
+        <div class="about__stats reveal">
+
+          <div class="about__stat">
+            <span class="about__stat-number" data-target="8">0</span>
+            <span class="about__stat-label">Projects Built</span>
+          </div>
+
+          <div class="about__stat">
+            <span class="about__stat-number" data-target="6">0</span>
+            <span class="about__stat-label">Technologies</span>
+          </div>
+
+          <div class="about__stat">
+            <span class="about__stat-number" data-target="50">0</span>
+            <span class="about__stat-label">DSA Problems</span>
+          </div>
+
+          <div class="about__stat">
+            <span class="about__stat-number" data-target="3">0</span>
+            <span class="about__stat-label">GitHub Repos</span>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- SKILLS SECTION will go here -->
+
+  <!-- PROJECTS SECTION will go here -->
+
+  <!-- CONTACT SECTION will go here -->
+
+  <!-- FOOTER will go here -->
+
+  <!-- Your script — always at the bottom of body, never in head -->
+  <script src="assets/js/script.js"></script>
+
+</body>
+
+</html>
