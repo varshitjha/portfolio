@@ -92,7 +92,8 @@ The portfolio uses EmailJS to send messages directly from the frontend without r
 Clone the repository:
 
 ```bash
-git clone YOUR_GITHUB_REPOSITORY_LINK
+# git clone YOUR_GITHUB_REPOSITORY_LINK
+git clone https://github.com/varshitjha/portfolio#varshit-jha-portfolio
 ```
 
 Navigate into the project folder:
