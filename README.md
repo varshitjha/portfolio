@@ -6,7 +6,7 @@ A modern responsive personal portfolio website built for showcasing frontend dev
 
 ## Live Preview
 
-Live Website: YOUR_VERCEL_DEPLOYMENT_LINK
+Live Website: https://vercel.com/varshitjhas-projects/portfolio
 
 This portfolio is deployed using Vercel.
 
@@ -92,8 +92,7 @@ The portfolio uses EmailJS to send messages directly from the frontend without r
 Clone the repository:
 
 ```bash
-# git clone YOUR_GITHUB_REPOSITORY_LINK
-git clone https://github.com/varshitjha/portfolio#varshit-jha-portfolio
+git clone https://github.com/varshitjha/portfolio.git
 ```
 
 Navigate into the project folder:
