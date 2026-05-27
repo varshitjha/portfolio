@@ -300,4 +300,39 @@ document.addEventListener('DOMContentLoaded', function () {
     counterObserver.observe(stat);
   });
 
+// ==========================================
+  // FEATURE 10: SKILL BAR ANIMATION
+  // Each .skills__bar-fill has a data-width
+  // attribute (e.g. data-width="85").
+  // When the bar scrolls into view, we animate
+  // its CSS width from 0% to that value.
+  // ==========================================
+
+  const skillBars = document.querySelectorAll('.skills__bar-fill');
+
+  const barObserver = new IntersectionObserver(
+    function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+
+        const bar       = entry.target;
+        const targetWidth = bar.getAttribute('data-width');
+
+        // Small delay so the reveal animation
+        // finishes before the bar starts filling
+        setTimeout(function () {
+          bar.style.width = targetWidth + '%';
+        }, 200);
+
+        // Animate once — then stop watching
+        barObserver.unobserve(bar);
+      });
+    },
+    { threshold: 0.4 }
+  );
+
+  skillBars.forEach(function (bar) {
+    barObserver.observe(bar);
+  });
+
 });
