@@ -335,4 +335,242 @@ document.addEventListener('DOMContentLoaded', function () {
     barObserver.observe(bar);
   });
 
+  // ==========================================
+  // FEATURE 11: CONTACT FORM — EMAILJS
+  // Docs: https://www.emailjs.com/docs/
+  // ==========================================
+
+  // --- YOUR CREDENTIALS ---
+  // Replace these three values with your real
+  // keys from the EmailJS dashboard.
+  const EMAILJS_PUBLIC_KEY  = 'nh-399kvCkQg5ZXqu';
+  const EMAILJS_SERVICE_ID  = 'service_0ur7tki';
+  const EMAILJS_TEMPLATE_ID = 'template_xjy3xv3';
+
+  // Initialise EmailJS with your public key.
+  // Must run before any emailjs.send() call.
+  if (typeof emailjs !== 'undefined') {
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+  }
+
+  // --- Cache DOM elements ---
+  const contactForm    = document.getElementById('contactForm');
+  const contactSuccess = document.getElementById('contactSuccess');
+  const submitBtn      = document.getElementById('contactSubmit');
+  const honeypotField  = document.getElementById('honeypot');
+
+  // --- Helper: mark a field as invalid ---
+  function showFieldError(inputId, errorId, message) {
+    const input = document.getElementById(inputId);
+    const span  = document.getElementById(errorId);
+    if (input) input.classList.add('contact__input--error');
+    if (span)  span.textContent = message;
+  }
+
+  // --- Helper: clear a field's error state ---
+  function clearFieldError(inputId, errorId) {
+    const input = document.getElementById(inputId);
+    const span  = document.getElementById(errorId);
+    if (input) input.classList.remove('contact__input--error');
+    if (span)  span.textContent = '';
+  }
+
+  // --- Clear errors on input so user gets instant feedback ---
+  var fieldPairs = [
+    ['contactName',    'nameError'],
+    ['contactEmail',   'emailError'],
+    ['contactSubject', 'subjectError'],
+    ['contactMessage', 'messageError'],
+  ];
+
+  fieldPairs.forEach(function (pair) {
+    var el = document.getElementById(pair[0]);
+    if (!el) return;
+    el.addEventListener('input', function () {
+      clearFieldError(pair[0], pair[1]);
+      hideFormBanner();
+    });
+  });
+
+  // --- Email format check ---
+  function isEmailValid(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  // --- Validate all four fields ---
+  // Returns true only when every field passes.
+  function validateAllFields(name, email, subject, message) {
+    var passed = true;
+
+    // Clear previous errors first
+    fieldPairs.forEach(function (pair) {
+      clearFieldError(pair[0], pair[1]);
+    });
+
+    if (name.length < 2) {
+      showFieldError(
+        'contactName', 'nameError',
+        'Please enter your full name.'
+      );
+      passed = false;
+    }
+
+    if (!isEmailValid(email)) {
+      showFieldError(
+        'contactEmail', 'emailError',
+        'Please enter a valid email address.'
+      );
+      passed = false;
+    }
+
+    if (subject.length < 3) {
+      showFieldError(
+        'contactSubject', 'subjectError',
+        'Please add a subject.'
+      );
+      passed = false;
+    }
+
+    if (message.length < 10) {
+      showFieldError(
+        'contactMessage', 'messageError',
+        'Message must be at least 10 characters.'
+      );
+      passed = false;
+    }
+
+    return passed;
+  }
+
+  // --- Loading state helpers ---
+  function setButtonLoading(isLoading) {
+    if (!submitBtn) return;
+    if (isLoading) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+      submitBtn.classList.add('contact__submit--loading');
+    } else {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML =
+        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" ' +
+        'stroke="currentColor" stroke-width="2" stroke-linecap="round" ' +
+        'stroke-linejoin="round" aria-hidden="true">' +
+        '<line x1="22" y1="2" x2="11" y2="13"/>' +
+        '<polygon points="22 2 15 22 11 13 2 9 22 2"/>' +
+        '</svg>' +
+        ' Send Message';
+      submitBtn.classList.remove('contact__submit--loading');
+    }
+  }
+
+  // --- Form-level error banner ---
+  // Appears below the fields on network / EmailJS failure.
+  // Created once, updated on each error, hidden on retry.
+  function showFormBanner(message) {
+    var banner = document.getElementById('formErrorBanner');
+    if (!banner) {
+      banner = document.createElement('p');
+      banner.id        = 'formErrorBanner';
+      banner.className = 'contact__form-error-banner';
+      if (submitBtn) {
+        submitBtn.insertAdjacentElement('beforebegin', banner);
+      }
+    }
+    banner.textContent = message;
+    banner.hidden      = false;
+  }
+
+  function hideFormBanner() {
+    var banner = document.getElementById('formErrorBanner');
+    if (banner) banner.hidden = true;
+  }
+
+  // --- Main submit handler ---
+  if (contactForm) {
+    contactForm.addEventListener('submit', async function (event) {
+      event.preventDefault();
+
+      // Read and trim all values
+      var name    = document.getElementById('contactName').value.trim();
+      var email   = document.getElementById('contactEmail').value.trim();
+      var subject = document.getElementById('contactSubject').value.trim();
+      var message = document.getElementById('contactMessage').value.trim();
+
+      // --- HONEYPOT CHECK ---
+      // If this hidden field has any value, it's a bot.
+      // Drop silently — never alert the bot that it was caught.
+      if (honeypotField && honeypotField.value.trim().length > 0) {
+        contactForm.reset();
+        return;
+      }
+
+      // --- VALIDATION ---
+      if (!validateAllFields(name, email, subject, message)) {
+        return;
+      }
+
+      // --- EMAILJS AVAILABILITY CHECK ---
+      if (typeof emailjs === 'undefined') {
+        showFormBanner(
+          'Mail service failed to load. ' +
+          'Please refresh the page and try again.'
+        );
+        return;
+      }
+
+      // --- START LOADING ---
+      setButtonLoading(true);
+      hideFormBanner();
+
+      // --- TEMPLATE PARAMETERS ---
+      // These keys must match {{variable}} names
+      // in your EmailJS template exactly.
+      var templateParams = {
+        from_name:  name,
+        from_email: email,
+        subject:    subject,
+        message:    message,
+      };
+
+      try {
+        // --- SEND EMAIL ---
+        await emailjs.send(
+          EMAILJS_SERVICE_ID,
+          EMAILJS_TEMPLATE_ID,
+          templateParams
+        );
+
+        // --- SUCCESS ---
+        contactForm.hidden    = true;
+        contactSuccess.hidden = false;
+        contactForm.reset();
+
+      } catch (err) {
+        // --- FAILURE ---
+        // Log full error for debugging, show clean message to user.
+        console.error('EmailJS send failed:', err);
+        showFormBanner(
+          'Something went wrong sending your message. ' +
+          'Please email me directly at yourname@example.com'
+        );
+
+      } finally {
+        // Always restore button whether success or fail
+        setButtonLoading(false);
+      }
+    });
+  }
+
+
+  // ==========================================
+  // FEATURE 12: AUTO FOOTER YEAR
+  // Sets the copyright year automatically.
+  // You never have to update it manually.
+  // ==========================================
+
+  const footerYear = document.getElementById('footerYear');
+  if (footerYear) {
+    footerYear.textContent = new Date().getFullYear();
+  }
+
 });
