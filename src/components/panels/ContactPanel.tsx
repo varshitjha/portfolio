@@ -55,6 +55,16 @@ export const ContactPanel: React.FC = () => {
 
     setLoading(true);
 
+    // If EmailJS keys are missing in production environment (e.g. Vercel env vars not set), use direct mailto link
+    if (!EMAILJS_CONFIG.SERVICE_ID || !EMAILJS_CONFIG.TEMPLATE_ID || !EMAILJS_CONFIG.PUBLIC_KEY) {
+      console.warn('EmailJS keys missing in environment variables. Triggering mailto fallback.');
+      handleDirectMailto();
+      setSubmitted(true);
+      setLoading(false);
+      showToast('Opened email app with pre-filled message.', 'info');
+      return;
+    }
+
     try {
       // Send real email via EmailJS API
       const response = await emailjs.send(
