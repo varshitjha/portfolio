@@ -340,12 +340,10 @@ document.addEventListener('DOMContentLoaded', function () {
   // Docs: https://www.emailjs.com/docs/
   // ==========================================
 
-  // --- YOUR CREDENTIALS ---
-  // Replace these three values with your real
-  // keys from the EmailJS dashboard.
-  const EMAILJS_PUBLIC_KEY  = 'nh-399kvCkQg5ZXqu';
-  const EMAILJS_SERVICE_ID  = 'service_0ur7tki';
-  const EMAILJS_TEMPLATE_ID = 'template_xjy3xv3';
+  // Replace these three values with your real keys from your environment variables / EmailJS dashboard.
+  const EMAILJS_PUBLIC_KEY  = '';
+  const EMAILJS_SERVICE_ID  = '';
+  const EMAILJS_TEMPLATE_ID = '';
 
   // Initialise EmailJS with your public key.
   // Must run before any emailjs.send() call.

@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/Toast';
 import emailjs from '@emailjs/browser';
+import { EMAILJS_CONFIG } from '@/config/email';
 
 export const Contact: React.FC = () => {
   const { showToast } = useToast();
@@ -38,8 +39,8 @@ export const Contact: React.FC = () => {
 
     try {
       await emailjs.send(
-        'service_0ur7tki',
-        'template_xjy3xv3',
+        EMAILJS_CONFIG.SERVICE_ID,
+        EMAILJS_CONFIG.TEMPLATE_ID,
         {
           from_name: formData.name,
           from_email: formData.email,
@@ -51,7 +52,7 @@ export const Contact: React.FC = () => {
           subject: formData.subject || `Portfolio Inquiry from ${formData.name}`,
           message: `Sender Name: ${formData.name}\nSender Email: ${formData.email}\n\nMessage:\n${formData.message}`,
         },
-        'nh-399kvCkQg5ZXqu'
+        EMAILJS_CONFIG.PUBLIC_KEY
       );
       setSubmitted(true);
       showToast('Message sent successfully! I will reply within 24h.', 'success');
