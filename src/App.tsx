@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ToastProvider } from '@/components/Toast';
 import { DashboardLayout, PanelId } from '@/components/DashboardLayout';
+import { CommandPalette } from '@/components/CommandPalette';
 import { HeroStage } from '@/components/panels/HeroStage';
 import { AboutPanel } from '@/components/panels/AboutPanel';
 import { SkillsMatrix } from '@/components/panels/SkillsMatrix';
@@ -11,6 +12,7 @@ import { ContactPanel } from '@/components/panels/ContactPanel';
 
 export function App() {
   const [activePanel, setActivePanel] = useState<PanelId>('overview');
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('portfolio-theme') || 'dark';
   });
@@ -35,11 +37,19 @@ export function App() {
         {/* Background Cursor Radial Glow */}
         <div className="cursor-glow" />
 
+        {/* Command Palette (Cmd+K) Modal */}
+        <CommandPalette
+          isOpen={commandPaletteOpen}
+          onClose={() => setCommandPaletteOpen(false)}
+          onNavigate={setActivePanel}
+        />
+
         <DashboardLayout
           activePanel={activePanel}
           setActivePanel={setActivePanel}
           currentTheme={theme}
           setTheme={setTheme}
+          onOpenCommandPalette={() => setCommandPaletteOpen(true)}
         >
           <AnimatePresence mode="wait">
             <motion.div

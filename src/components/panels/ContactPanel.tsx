@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Clock, Send, Copy, Check, Github, Linkedin } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Mail, Phone, MapPin, Clock, Send, Copy, Check, ExternalLink } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/Toast';
 import emailjs from '@emailjs/browser';
+import { EMAILJS_CONFIG } from '@/config/email';
 
 export const ContactPanel: React.FC = () => {
   const { showToast } = useToast();
@@ -13,8 +14,15 @@ export const ContactPanel: React.FC = () => {
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [copiedPhone, setCopiedPhone] = useState(false);
 
+  useEffect(() => {
+    // Initialize EmailJS with public key
+    if (EMAILJS_CONFIG.PUBLIC_KEY) {
+      emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
+    }
+  }, []);
+
   const handleCopyEmail = () => {
-    navigator.clipboard.writeText('varshitjha17@gmail.com');
+    navigator.clipboard.writeText(EMAILJS_CONFIG.TO_EMAIL);
     setCopiedEmail(true);
     showToast('Email address copied to clipboard!', 'success');
     setTimeout(() => setCopiedEmail(false), 2000);
@@ -27,6 +35,17 @@ export const ContactPanel: React.FC = () => {
     setTimeout(() => setCopiedPhone(false), 2000);
   };
 
+  const handleDirectMailto = () => {
+    const subject = encodeURIComponent(formData.subject || `Portfolio Message from ${formData.name || 'Visitor'}`);
+    const body = encodeURIComponent(
+      formData.message
+        ? `From: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+        : 'Hi Varshit, I would like to connect with you regarding an opportunity!'
+    );
+    window.location.href = `mailto:${EMAILJS_CONFIG.TO_EMAIL}?subject=${subject}&body=${body}`;
+    showToast('Opening default email client...', 'info');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) {
@@ -37,22 +56,37 @@ export const ContactPanel: React.FC = () => {
     setLoading(true);
 
     try {
-      await emailjs.send(
-        'service_0ur7tki',
-        'template_xjy3xv3',
+      // Send real email via EmailJS API
+      const response = await emailjs.send(
+        EMAILJS_CONFIG.SERVICE_ID,
+        EMAILJS_CONFIG.TEMPLATE_ID,
         {
           from_name: formData.name,
           from_email: formData.email,
-          subject: formData.subject || 'Portfolio Inquiry',
-          message: formData.message,
+          reply_to: formData.email,
+          user_name: formData.name,
+          user_email: formData.email,
+          name: formData.name,
+          email: formData.email,
+          to_name: 'Varshit Jha',
+          to_email: EMAILJS_CONFIG.TO_EMAIL,
+          subject: formData.subject || `Portfolio Inquiry from ${formData.name}`,
+          message: `Sender Name: ${formData.name}\nSender Email: ${formData.email}\n\nMessage:\n${formData.message}`,
         },
-        'nh-399kvCkQg5ZXqu'
+        EMAILJS_CONFIG.PUBLIC_KEY
       );
+
+      if (response.status === 200) {
+        setSubmitted(true);
+        showToast('Email sent! Delivered directly to inbox.', 'success');
+      } else {
+        throw new Error(`EmailJS failed with status: ${response.status}`);
+      }
+    } catch (err: any) {
+      console.warn('EmailJS error, falling back to mailto link:', err);
+      handleDirectMailto();
       setSubmitted(true);
-      showToast('Message sent! I will respond within 24 hours.', 'success');
-    } catch (err) {
-      console.error('EmailJS error:', err);
-      showToast('Error sending message. Please email varshitjha17@gmail.com directly.', 'warning');
+      showToast('Opened email app with pre-filled message.', 'info');
     } finally {
       setLoading(false);
     }
@@ -69,7 +103,7 @@ export const ContactPanel: React.FC = () => {
           Let's Build Together
         </h2>
         <p className="text-base text-[var(--color-text-secondary)]">
-          Direct contact channels, single-click copy buttons, and an active inbox form.
+          Send a message directly to <strong>{EMAILJS_CONFIG.TO_EMAIL}</strong> via EmailJS.
         </p>
       </div>
 
@@ -87,7 +121,7 @@ export const ContactPanel: React.FC = () => {
             </h3>
 
             <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
-              Open to internships, junior developer roles, and freelance projects.
+              Open to internships, full-time engineering roles, and freelance projects.
             </p>
 
             <div className="space-y-3 pt-2">
@@ -102,7 +136,7 @@ export const ContactPanel: React.FC = () => {
                 <div className="flex-1">
                   <span className="block text-[10px] text-[var(--color-text-muted)] font-mono uppercase">Email</span>
                   <span className="text-xs font-medium text-[var(--color-text-primary)] group-hover:text-[var(--color-accent-light)]">
-                    varshitjha17@gmail.com
+                    {EMAILJS_CONFIG.TO_EMAIL}
                   </span>
                 </div>
                 {copiedEmail ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4 text-[var(--color-text-muted)]" />}
@@ -158,9 +192,9 @@ export const ContactPanel: React.FC = () => {
                 <div className="w-14 h-14 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto">
                   <Check className="w-7 h-7" />
                 </div>
-                <h4 className="text-2xl font-bold text-[var(--color-text-primary)]">Message Sent!</h4>
+                <h4 className="text-2xl font-bold text-[var(--color-text-primary)]">Email Delivered!</h4>
                 <p className="text-xs text-[var(--color-text-secondary)] max-w-md mx-auto">
-                  Thank you for reaching out! Your message was received and I will reply within 24 hours.
+                  Thank you! Your email was sent to <strong>{EMAILJS_CONFIG.TO_EMAIL}</strong>. I will reply within 24 hours.
                 </p>
                 <Button variant="outline" onClick={() => setSubmitted(false)} className="mt-4">
                   Send Another Message
@@ -224,16 +258,27 @@ export const ContactPanel: React.FC = () => {
                   />
                 </div>
 
-                <Button variant="primary" size="lg" type="submit" disabled={loading} className="w-full">
-                  {loading ? (
-                    <span>Sending...</span>
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4" />
-                      <span>Send Message</span>
-                    </>
-                  )}
-                </Button>
+                <div className="space-y-3 pt-2">
+                  <Button variant="primary" size="lg" type="submit" disabled={loading} className="w-full">
+                    {loading ? (
+                      <span>Sending Email...</span>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        <span>Send Email via EmailJS</span>
+                      </>
+                    )}
+                  </Button>
+
+                  <button
+                    type="button"
+                    onClick={handleDirectMailto}
+                    className="w-full py-2 text-xs font-mono text-[var(--color-text-muted)] hover:text-[var(--color-accent-light)] flex items-center justify-center gap-1.5 transition-colors"
+                  >
+                    <span>Or open in default email app ({EMAILJS_CONFIG.TO_EMAIL})</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </button>
+                </div>
               </form>
             )}
           </Card>

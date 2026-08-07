@@ -43,8 +43,13 @@ export const Contact: React.FC = () => {
         {
           from_name: formData.name,
           from_email: formData.email,
-          subject: formData.subject || 'Portfolio Inquiry',
-          message: formData.message,
+          reply_to: formData.email,
+          user_name: formData.name,
+          user_email: formData.email,
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject || `Portfolio Inquiry from ${formData.name}`,
+          message: `Sender Name: ${formData.name}\nSender Email: ${formData.email}\n\nMessage:\n${formData.message}`,
         },
         'nh-399kvCkQg5ZXqu'
       );

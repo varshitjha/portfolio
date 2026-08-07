@@ -2,55 +2,27 @@ import React, { useState } from 'react';
 import { Code, Terminal, Wrench } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-
-interface SkillItem {
-  name: string;
-  level: string;
-  category: 'frontend' | 'languages' | 'tools';
-}
+import { skillsData, SkillItem } from '@/data/skills';
 
 export const SkillsMatrix: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<'all' | 'frontend' | 'languages' | 'tools'>('all');
 
-  const skills: SkillItem[] = [
-    // Frontend
-    { name: 'HTML5', level: 'Strong', category: 'frontend' },
-    { name: 'CSS3 / Modern Layouts', level: 'Strong', category: 'frontend' },
-    { name: 'JavaScript (ES6+)', level: 'Advanced', category: 'frontend' },
-    { name: 'React.js', level: 'Intermediate', category: 'frontend' },
-    { name: 'TypeScript', level: 'Intermediate', category: 'frontend' },
-    { name: 'Tailwind CSS', level: 'Strong', category: 'frontend' },
-
-    // Languages
-    { name: 'C Programming', level: 'Strong', category: 'languages' },
-    { name: 'Python', level: 'Intermediate', category: 'languages' },
-    { name: 'JavaScript', level: 'Advanced', category: 'languages' },
-    { name: 'TypeScript', level: 'Intermediate', category: 'languages' },
-
-    // Tools & CS
-    { name: 'Git & GitHub', level: 'Strong', category: 'tools' },
-    { name: 'VS Code', level: 'Advanced', category: 'tools' },
-    { name: 'Vercel Deployment', level: 'Strong', category: 'tools' },
-    { name: 'REST APIs & Fetch', level: 'Strong', category: 'tools' },
-    { name: 'Data Structures (DSA)', level: 'Learning', category: 'tools' },
-  ];
-
-  const filteredSkills = activeCategory === 'all'
-    ? skills
-    : skills.filter((s) => s.category === activeCategory);
+  const categoriesToDisplay = activeCategory === 'all'
+    ? skillsData
+    : skillsData.filter((cat) => cat.id === activeCategory);
 
   return (
     <div className="space-y-10 animate-in fade-in duration-300">
       {/* Header */}
       <div className="space-y-2">
         <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[var(--color-accent-light)] px-3 py-1 rounded-full bg-[var(--color-accent-glow)] border border-[var(--color-accent)]/30 inline-block">
-          // Skills Matrix
+          // Skills Taxonomy
         </span>
         <h2 className="text-3xl font-bold tracking-tight text-[var(--color-text-primary)]">
-          Technical Stack &amp; Tooling
+          Technical Stack &amp; Skill Matrix
         </h2>
         <p className="text-base text-[var(--color-text-secondary)]">
-          Grouped by category with proficiency labels—no fake percentages.
+          Grouped by engineering category with proficiency labels—no fake percentages.
         </p>
       </div>
 
@@ -98,24 +70,31 @@ export const SkillsMatrix: React.FC = () => {
         </button>
       </div>
 
-      {/* Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {filteredSkills.map((skill, index) => (
-          <Card
-            key={`${skill.name}-${index}`}
-            className="p-4 flex flex-col justify-between items-start gap-3 hover:border-[var(--color-accent)] transition-all hover:scale-105"
-          >
-            <div className="flex items-center gap-2">
-              {skill.category === 'frontend' && <Code className="w-4 h-4 text-sky-400" />}
-              {skill.category === 'languages' && <Terminal className="w-4 h-4 text-amber-400" />}
-              {skill.category === 'tools' && <Wrench className="w-4 h-4 text-emerald-400" />}
-              <span className="text-sm font-semibold text-[var(--color-text-primary)]">{skill.name}</span>
-            </div>
+      {/* Grouped Categories */}
+      <div className="space-y-8">
+        {categoriesToDisplay.map((cat) => (
+          <div key={cat.id} className="space-y-4">
+            <h3 className="text-lg font-semibold text-[var(--color-text-primary)] flex items-center gap-2">
+              {cat.id === 'frontend' && <Code className="w-5 h-5 text-sky-400" />}
+              {cat.id === 'languages' && <Terminal className="w-5 h-5 text-amber-400" />}
+              {cat.id === 'tools' && <Wrench className="w-5 h-5 text-emerald-400" />}
+              <span>{cat.categoryName}</span>
+            </h3>
 
-            <Badge variant={skill.level === 'Advanced' ? 'accent' : 'secondary'}>
-              {skill.level}
-            </Badge>
-          </Card>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              {cat.skills.map((skill: SkillItem) => (
+                <Card
+                  key={skill.name}
+                  className="p-4 flex flex-col justify-between items-start gap-3 hover:border-[var(--color-accent)] transition-all hover:scale-105"
+                >
+                  <span className="text-sm font-semibold text-[var(--color-text-primary)]">{skill.name}</span>
+                  <Badge variant={skill.level === 'Advanced' ? 'accent' : 'secondary'}>
+                    {skill.level}
+                  </Badge>
+                </Card>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
     </div>

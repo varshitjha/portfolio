@@ -12,7 +12,7 @@ import {
   Download,
   Menu,
   X,
-  Sparkles,
+  Search,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/Toast';
@@ -24,6 +24,7 @@ interface DashboardLayoutProps {
   setActivePanel: (panel: PanelId) => void;
   currentTheme: string;
   setTheme: (theme: string) => void;
+  onOpenCommandPalette: () => void;
   children: React.ReactNode;
 }
 
@@ -32,6 +33,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   setActivePanel,
   currentTheme,
   setTheme,
+  onOpenCommandPalette,
   children,
 }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -71,6 +73,20 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               Portfolio OS v2.5
             </span>
           </div>
+
+          {/* Command Palette Trigger Button */}
+          <button
+            onClick={onOpenCommandPalette}
+            className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] hover:border-[var(--color-accent)] text-xs text-[var(--color-text-secondary)] transition-all cursor-pointer group"
+          >
+            <span className="flex items-center gap-2">
+              <Search className="w-3.5 h-3.5 text-[var(--color-accent-light)]" />
+              <span>Command Palette</span>
+            </span>
+            <kbd className="px-1.5 py-0.5 font-mono text-[10px] rounded bg-[var(--color-bg-surface)] border border-[var(--color-border)] group-hover:border-[var(--color-accent)]">
+              ⌘K
+            </kbd>
+          </button>
 
           {/* Navigation Items */}
           <nav className="space-y-1">
@@ -140,6 +156,20 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
           {/* Top Actions */}
           <div className="flex items-center gap-3">
+            {/* Command Search Trigger Button */}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onOpenCommandPalette}
+              className="hidden sm:inline-flex"
+            >
+              <Search className="w-3.5 h-3.5 text-[var(--color-accent-light)]" />
+              <span>Search</span>
+              <kbd className="px-1.5 py-0.5 font-mono text-[10px] rounded bg-[var(--color-bg-surface)] border border-[var(--color-border)] ml-1">
+                ⌘K
+              </kbd>
+            </Button>
+
             <Button
               variant="primary"
               size="sm"
@@ -160,6 +190,22 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         {/* Mobile Navigation Drawer */}
         {sidebarOpen && (
           <div className="md:hidden bg-[var(--color-bg-surface)] border-b border-[var(--color-border)] p-4 space-y-2 z-30">
+            <button
+              onClick={() => {
+                onOpenCommandPalette();
+                setSidebarOpen(false);
+              }}
+              className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] text-xs text-[var(--color-text-secondary)] mb-2"
+            >
+              <span className="flex items-center gap-2">
+                <Search className="w-4 h-4 text-[var(--color-accent-light)]" />
+                <span>Command Palette</span>
+              </span>
+              <kbd className="px-1.5 py-0.5 font-mono text-[10px] rounded bg-[var(--color-bg-surface)] border border-[var(--color-border)]">
+                ⌘K
+              </kbd>
+            </button>
+
             {navItems.map((item) => (
               <button
                 key={item.id}
