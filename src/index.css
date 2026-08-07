@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root,
+[data-theme="dark"] {
+  --color-bg:          #0a0a0f;
+  --color-bg-surface:  #13131a;
+  --color-bg-card:     #1a1a24;
+  --color-bg-hover:    #22222f;
+
+  --color-accent:      #7c3aed;
+  --color-accent-light:#a78bfa;
+  --color-accent-glow: rgba(124, 58, 237, 0.18);
+
+  --color-text-primary:   #f1f0f5;
+  --color-text-secondary: #a09db8;
+  --color-text-muted:     #5c5975;
+
+  --color-border:         rgba(255, 255, 255, 0.08);
+  --mouse-x: 50%;
+  --mouse-y: 30%;
+}
+
+[data-theme="light"] {
+  --color-bg:          #f8fafc;
+  --color-bg-surface:  #ffffff;
+  --color-bg-card:     #ffffff;
+  --color-bg-hover:    #f1f5f9;
+
+  --color-accent:      #6366f1;
+  --color-accent-light:#4f46e5;
+  --color-accent-glow: rgba(99, 102, 241, 0.15);
+
+  --color-text-primary:   #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted:     #94a3b8;
+
+  --color-border:         rgba(0, 0, 0, 0.09);
+}
+
+[data-theme="cyberpunk"] {
+  --color-bg:          #030712;
+  --color-bg-surface:  #0b0f19;
+  --color-bg-card:     #111827;
+  --color-bg-hover:    #1f2937;
+
+  --color-accent:      #00f3ff;
+  --color-accent-light:#70f8ff;
+  --color-accent-glow: rgba(0, 243, 255, 0.2);
+
+  --color-text-primary:   #f9fafb;
+  --color-text-secondary: #9ca3af;
+  --color-text-muted:     #4b5563;
+
+  --color-border:         rgba(0, 243, 255, 0.2);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Background cursor spotlight */
+.cursor-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 50%) var(--mouse-y, 30%),
+    var(--color-accent-glow),
+    transparent 80%
+  );
+  transition: opacity 0.3s ease;
+}

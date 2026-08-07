@@ -547,11 +547,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
       } catch (err) {
         // --- FAILURE ---
-        // Log full error for debugging, show clean message to user.
-        console.error('EmailJS send failed:', err);
         showFormBanner(
           'Something went wrong sending your message. ' +
-          'Please email me directly at yourname@example.com'
+          'Please email me directly at varshitjha17@gmail.com'
         );
 
       } finally {
@@ -564,8 +562,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // ==========================================
   // FEATURE 12: AUTO FOOTER YEAR
-  // Sets the copyright year automatically.
-  // You never have to update it manually.
   // ==========================================
 
   const footerYear = document.getElementById('footerYear');
@@ -573,4 +569,434 @@ document.addEventListener('DOMContentLoaded', function () {
     footerYear.textContent = new Date().getFullYear();
   }
 
+
+  // ==========================================
+  // FEATURE 13: TOAST NOTIFICATION SYSTEM
+  // ==========================================
+
+  const toastContainer = document.getElementById('toastContainer');
+
+  function showToast(message, type = 'info') {
+    if (!toastContainer) return;
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast--${type}`;
+    
+    let icon = '⚡';
+    if (type === 'success') icon = '✓';
+    if (type === 'warning') icon = '⚠️';
+
+    toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+    toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(100%)';
+      setTimeout(() => toast.remove(), 300);
+    }, 3200);
+  }
+
+
+  // ==========================================
+  // FEATURE 14: MULTI-THEME ENGINE (Dark/Light/Cyberpunk)
+  // ==========================================
+
+  const themeToggleBtn = document.getElementById('themeToggle');
+  const themes = ['dark', 'light', 'cyberpunk'];
+  let currentTheme = localStorage.getItem('portfolio-theme') || 'dark';
+
+  function applyTheme(themeName) {
+    document.documentElement.setAttribute('data-theme', themeName);
+    localStorage.setItem('portfolio-theme', themeName);
+    currentTheme = themeName;
+  }
+
+  // Initial theme application
+  applyTheme(currentTheme);
+
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', () => {
+      const nextIndex = (themes.indexOf(currentTheme) + 1) % themes.length;
+      const nextTheme = themes[nextIndex];
+      applyTheme(nextTheme);
+      showToast(`Switched theme to ${nextTheme.toUpperCase()}`, 'info');
+    });
+  }
+
+
+  // ==========================================
+  // FEATURE 15: BACKGROUND CURSOR SPOTLIGHT GLOW
+  // ==========================================
+
+  window.addEventListener('mousemove', (e) => {
+    document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
+    document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
+  });
+
+
+  // ==========================================
+  // FEATURE 16: INTERACTIVE DEVELOPER CLI TERMINAL
+  // ==========================================
+
+  const terminalForm   = document.getElementById('terminalForm');
+  const terminalInput  = document.getElementById('terminalInput');
+  const terminalOutput = document.getElementById('terminalOutput');
+  const terminalClear  = document.getElementById('terminalClearBtn');
+
+  const commandRegistry = {
+    help: () => `
+<span class="terminal__prompt-system">Available Commands:</span><br/>
+• <span class="terminal__cmd-tag">about</span>    - Brief intro & background<br/>
+• <span class="terminal__cmd-tag">skills</span>   - List tech stack & frameworks<br/>
+• <span class="terminal__cmd-tag">projects</span> - Display highlighted projects<br/>
+• <span class="terminal__cmd-tag">contact</span>  - Show direct email & social links<br/>
+• <span class="terminal__cmd-tag">theme</span>    - Cycle UI color theme<br/>
+• <span class="terminal__cmd-tag">sudo hire</span>- Trigger fast-track hire protocol<br/>
+• <span class="terminal__cmd-tag">clear</span>    - Clear terminal screen
+    `,
+    about: () => `
+<span class="terminal__prompt-system">[Varshit Jha]</span>: CS student at Parul University, India.<br/>
+Passionate about building responsive, accessible web interfaces and clean algorithms.
+    `,
+    skills: () => `
+<span class="terminal__prompt-system">Tech Stack Matrix:</span><br/>
+Languages: HTML5, CSS3, JavaScript (ES6+), C, Python<br/>
+Frontend:  DOM, Fetch API, Tailwind, React (in progress)<br/>
+Tools:     Git, GitHub, Vercel, VS Code
+    `,
+    projects: () => `
+<span class="terminal__prompt-system">Featured Projects:</span><br/>
+1. <a href="#projects" style="color:#00f3ff;">Developer Portfolio</a> (Vanilla JS)<br/>
+2. <a href="#projects" style="color:#00f3ff;">Weather Dashboard</a> (REST API)<br/>
+3. <a href="#projects" style="color:#00f3ff;">TaskFlow Board</a> (CRUD + LocalStorage)<br/>
+4. <a href="#projects" style="color:#00f3ff;">GitHub Finder</a> (GitHub REST API)
+    `,
+    contact: () => `
+<span class="terminal__prompt-system">Contact Details:</span><br/>
+Email: varshitjha17@gmail.com<br/>
+Phone: +91 7250725745<br/>
+GitHub: github.com/varshitjha
+    `,
+    theme: () => {
+      const nextIndex = (themes.indexOf(currentTheme) + 1) % themes.length;
+      applyTheme(themes[nextIndex]);
+      return `Theme switched to: <span class="terminal__cmd-tag">${themes[nextIndex]}</span>`;
+    },
+    'sudo hire': () => {
+      setTimeout(() => {
+        const contactSection = document.getElementById('contact');
+        if (contactSection) contactSection.scrollIntoView({ behavior: 'smooth' });
+        showToast('Hire Protocol Activated! Inbox ready.', 'success');
+      }, 500);
+      return `<span style="color:#10b981; font-weight:bold;">[SUCCESS]</span> Access granted! Fast-tracking to contact section...`;
+    }
+  };
+
+  function executeCommand(rawCmd) {
+    const cmd = rawCmd.trim().toLowerCase();
+    if (!cmd) return;
+
+    if (cmd === 'clear') {
+      if (terminalOutput) {
+        terminalOutput.innerHTML = `
+          <div class="terminal__line terminal__welcome">
+            <span class="terminal__prompt-system">[system]:</span> Screen cleared. Type <span class="terminal__cmd-tag">'help'</span>.
+          </div>
+        `;
+      }
+      return;
+    }
+
+    // Print command line
+    const userLine = document.createElement('div');
+    userLine.className = 'terminal__line';
+    userLine.innerHTML = `<span class="terminal__prompt-user">guest@varshit-dev:~$</span> ${rawCmd}`;
+    terminalOutput.appendChild(userLine);
+
+    // Print response
+    const respLine = document.createElement('div');
+    respLine.className = 'terminal__line';
+
+    if (commandRegistry[cmd]) {
+      respLine.innerHTML = commandRegistry[cmd]();
+    } else {
+      respLine.innerHTML = `<span style="color:#f87171;">Command not found: '${cmd}'. Type <span class="terminal__cmd-tag">'help'</span>.</span>`;
+    }
+
+    terminalOutput.appendChild(respLine);
+    terminalOutput.scrollTop = terminalOutput.scrollHeight;
+  }
+
+  if (terminalForm && terminalInput) {
+    terminalForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const inputVal = terminalInput.value;
+      executeCommand(inputVal);
+      terminalInput.value = '';
+    });
+  }
+
+  if (terminalClear) {
+    terminalClear.addEventListener('click', () => executeCommand('clear'));
+  }
+
+
+  // ==========================================
+  // FEATURE 17: PROJECT CATEGORY FILTER TABS
+  // ==========================================
+
+  const filterBtns = document.querySelectorAll('.projects__filter-btn');
+  const projectCards = document.querySelectorAll('.projects__featured, .projects__card');
+
+  filterBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      // Update active button state
+      filterBtns.forEach((b) => b.classList.remove('projects__filter-btn--active'));
+      btn.classList.add('projects__filter-btn--active');
+
+      const filter = btn.getAttribute('data-filter');
+
+      projectCards.forEach((card) => {
+        const category = card.getAttribute('data-category') || '';
+        if (filter === 'all' || category.includes(filter)) {
+          card.style.display = '';
+          card.style.opacity = '1';
+          card.style.transform = 'scale(1)';
+        } else {
+          card.style.opacity = '0';
+          card.style.transform = 'scale(0.95)';
+          setTimeout(() => {
+            if (btn.getAttribute('data-filter') !== 'all' && !card.getAttribute('data-category').includes(btn.getAttribute('data-filter'))) {
+              card.style.display = 'none';
+            }
+          }, 200);
+        }
+      });
+    });
+  });
+
+
+  // ==========================================
+  // FEATURE 18: PROJECT QUICK VIEW MODAL
+  // ==========================================
+
+  const projectModal   = document.getElementById('projectModal');
+  const modalOverlay   = document.getElementById('modalOverlay');
+  const modalCloseBtn = document.getElementById('modalCloseBtn');
+  const modalContent  = document.getElementById('modalContent');
+
+  const projectDetailsData = [
+    {
+      title: 'Developer Portfolio Website',
+      description: 'A modern, responsive, multi-theme developer portfolio engineered with plain HTML, CSS, and JavaScript.',
+      features: [
+        'Interactive CLI Terminal Widget',
+        '3-Mode Theme Engine (Dark, Light, Cyberpunk)',
+        'Live GitHub REST API Profile & Repo Integration',
+        'Filterable Project Category Grid',
+        'Custom Toast Alert System'
+      ],
+      github: 'https://github.com/varshitjha/portfolio',
+      demo: 'https://varshitjha.dev'
+    },
+    {
+      title: 'Weather Dashboard App',
+      description: 'Real-time weather query web application leveraging OpenWeatherMap REST API.',
+      features: [
+        'Live temperature, humidity & wind metrics',
+        '5-Day forecast data parser',
+        'Dynamic weather condition icons',
+        'Robust API error handling & loading states'
+      ],
+      github: 'https://github.com/varshitjha/weather-app',
+      demo: 'https://weather-app-demo.vercel.app'
+    },
+    {
+      title: 'TaskFlow Board',
+      description: 'Full CRUD task & workflow management dashboard with localStorage state retention.',
+      features: [
+        'Create, Edit, Complete & Delete tasks',
+        'Priority tagging (High, Medium, Low)',
+        'Local Storage state persistence',
+        'Clean responsive UI layout'
+      ],
+      github: 'https://github.com/varshitjha/vj_TaskFlow-Board',
+      demo: 'https://task-manager-demo.vercel.app'
+    },
+    {
+      title: 'GitHub Profile Finder',
+      description: 'Instant developer lookup app pulling stats directly from GitHub public APIs.',
+      features: [
+        'Live user profile lookup',
+        'Repository star & fork counters',
+        'Followers & bio details',
+        'Direct link to recent repositories'
+      ],
+      github: 'https://github.com/varshitjha/github-finder',
+      demo: 'https://github-finder-demo.vercel.app'
+    }
+  ];
+
+  function openProjectModal(index) {
+    const data = projectDetailsData[index];
+    if (!data || !projectModal || !modalContent) return;
+
+    modalContent.innerHTML = `
+      <h3 class="modal__title">${data.title}</h3>
+      <p class="modal__desc">${data.description}</p>
+      <div class="modal__features">
+        <h4>Key Highlights &amp; Technical Features:</h4>
+        <ul>
+          ${data.features.map((f) => `<li>${f}</li>`).join('')}
+        </ul>
+      </div>
+      <div class="projects__actions" style="margin-top:20px;">
+        <a href="${data.github}" class="btn btn--outline" target="_blank" rel="noopener noreferrer">View GitHub</a>
+        <a href="${data.demo}" class="btn btn--primary" target="_blank" rel="noopener noreferrer">Live Demo</a>
+      </div>
+    `;
+
+    projectModal.classList.add('modal--open');
+    projectModal.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeProjectModal() {
+    if (!projectModal) return;
+    projectModal.classList.remove('modal--open');
+    projectModal.setAttribute('aria-hidden', 'true');
+  }
+
+  document.querySelectorAll('.project-quick-view').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      const index = parseInt(e.currentTarget.getAttribute('data-project'), 10);
+      openProjectModal(index);
+    });
+  });
+
+  if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeProjectModal);
+  if (modalOverlay)  modalOverlay.addEventListener('click', closeProjectModal);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeProjectModal();
+  });
+
+
+  // ==========================================
+  // FEATURE 19: LIVE GITHUB REST API FETCHER
+  // ==========================================
+
+  const GITHUB_USERNAME = 'varshitjha';
+
+  async function fetchGitHubStats() {
+    const ghRepos     = document.getElementById('ghRepos');
+    const ghFollowers = document.getElementById('ghFollowers');
+    const ghStars     = document.getElementById('ghStars');
+    const ghForks     = document.getElementById('ghForks');
+    const ghRepoList  = document.getElementById('ghRepoList');
+
+    if (!ghRepos) return;
+
+    try {
+      // 1. Fetch Profile info
+      const userRes = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`);
+      if (!userRes.ok) throw new Error('GitHub profile fetch failed');
+      const userData = await userRes.json();
+
+      ghRepos.textContent     = userData.public_repos || '0';
+      ghFollowers.textContent = userData.followers || '0';
+
+      // 2. Fetch Repos
+      const reposRes = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=6`);
+      if (!reposRes.ok) throw new Error('GitHub repos fetch failed');
+      const reposData = await reposRes.json();
+
+      let totalStars = 0;
+      let totalForks = 0;
+
+      reposData.forEach((r) => {
+        totalStars += r.stargazers_count || 0;
+        totalForks += r.forks_count || 0;
+      });
+
+      ghStars.textContent = totalStars;
+      ghForks.textContent = totalForks;
+
+      // 3. Render Top Repositories
+      if (ghRepoList) {
+        if (reposData.length === 0) {
+          ghRepoList.innerHTML = '<div class="github-stats__loading">No public repositories found.</div>';
+          return;
+        }
+
+        ghRepoList.innerHTML = reposData.slice(0, 4).map((repo) => `
+          <div class="github-repo-card">
+            <div>
+              <div class="github-repo-card__name">
+                <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer">${repo.name}</a>
+              </div>
+              <div class="github-repo-card__desc">${repo.description || 'No description provided.'}</div>
+            </div>
+            <div class="github-repo-card__meta">
+              <span>● ${repo.language || 'Code'}</span>
+              <span>★ ${repo.stargazers_count}</span>
+              <span>⑂ ${repo.forks_count}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+    } catch (err) {
+      console.warn('GitHub API fetch fallback triggered:', err);
+      // Fallback values if offline or rate limited
+      if (ghRepos) ghRepos.textContent = '10+';
+      if (ghFollowers) ghFollowers.textContent = '5+';
+      if (ghStars) ghStars.textContent = '12';
+      if (ghForks) ghForks.textContent = '4';
+      if (ghRepoList) {
+        ghRepoList.innerHTML = `
+          <div class="github-repo-card">
+            <div class="github-repo-card__name"><a href="https://github.com/varshitjha/portfolio" target="_blank">portfolio</a></div>
+            <div class="github-repo-card__desc">Developer portfolio website built with HTML, CSS &amp; JavaScript.</div>
+            <div class="github-repo-card__meta"><span>● JavaScript</span><span>★ 5</span></div>
+          </div>
+          <div class="github-repo-card">
+            <div class="github-repo-card__name"><a href="https://github.com/varshitjha/weather-app" target="_blank">weather-app</a></div>
+            <div class="github-repo-card__desc">Real-time weather dashboard with OpenWeather API.</div>
+            <div class="github-repo-card__meta"><span>● JavaScript</span><span>★ 3</span></div>
+          </div>
+        `;
+      }
+    }
+  }
+
+  // Trigger GitHub API fetch
+  fetchGitHubStats();
+
+
+  // ==========================================
+  // FEATURE 20: SINGLE-CLICK COPY TO CLIPBOARD
+  // ==========================================
+
+  const copyEmailBtn = document.getElementById('copyEmailBtn');
+  const copyPhoneBtn = document.getElementById('copyPhoneBtn');
+
+  if (copyEmailBtn) {
+    copyEmailBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const email = 'varshitjha17@gmail.com';
+      navigator.clipboard.writeText(email);
+      showToast('Email address copied to clipboard!', 'success');
+    });
+  }
+
+  if (copyPhoneBtn) {
+    copyPhoneBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const phone = '+917250725745';
+      navigator.clipboard.writeText(phone);
+      showToast('Phone number copied to clipboard!', 'success');
+    });
+  }
+
 });
+
